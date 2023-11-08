@@ -6,31 +6,30 @@ import java.awt.event.ActionListener;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 class GUI_2{
 
     public static void main(String[]args){
         JPanel panel = new JPanel();
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("PASSSWORD MANAGER");
         frame.setSize(700,700);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.add(panel);
 
         panel.setLayout(null);
-
-        //an array of strings to add and remove from the list whenever a button is called
-        String[] header = {"Website", "Username", "Password"};
-        String[][] rec = {{"", "", ""},{"","",""}};
-
+        String [] header = {"Website", "Username", "Password"};
         //table to store array elements in
         JTable table = new JTable(0,3);
-
+        DefaultTableModel tblmodel = (DefaultTableModel)table.getModel();
+        tblmodel.addRow(new Object[]{"Website", "Username", "Password"});
+        panel.add(new JScrollPane(table));
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setShowHorizontalLines(true);
         table.setShowGrid(true);
         table.setGridColor(Color.gray);
-        table.setBounds(10, 50,680, 400);
+        table.setBounds(10, 50,680, 500);
         panel.add(new JScrollPane(table));
         panel.add(table);
 
@@ -71,13 +70,14 @@ class GUI_2{
 
         //Adding an actionlistener to invoke add button
 
+
         ActionListener actionListener=new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) // Function to invoke add button
             {
 
                 String data[] = {usertext.getText(), passtext.getText(), webtext.getText()};
-                DefaultTableModel tblmodel = (DefaultTableModel)table.getModel();
+
 
                 if (usertext.equals("") || passtext.equals("")||webtext.equals(""))
                 {
@@ -106,19 +106,25 @@ class GUI_2{
         removebutton.setBounds(400, 630, 80 , 25);
         panel.add(removebutton);
 
-        ActionListener actionListener1=new ActionListener(){
+        ActionListener actionListener1 = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){
-                table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-                if(table.getSelectedRow() != -1) {
 
-                    //tblmodel.removeRow(table.getSelectedRow());
-                    JOptionPane.showMessageDialog(null, "Selected row deleted successfully");
+                if(table.getSelectedRowCount()==1){
+                    tblmodel.removeRow(table.getSelectedRow());
                 }
-            }
-        };
+                else{
+                    if(table.getRowCount()==0){
+                        JOptionPane.showMessageDialog(null, "Table is empty");}
+                    else{
+                        JOptionPane.showMessageDialog(null, "Select single row for deletion");}
+                    }
+                }
 
+            };
+
+        removebutton.addActionListener(actionListener1);
         frame.setVisible(true);
     }
 }
