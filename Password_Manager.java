@@ -2,29 +2,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import javax.swing.border.TitledBorder;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+
 
 class GUI_2{
 
     public static void main(String[]args){
         JPanel panel = new JPanel();
-        JFrame frame = new JFrame("PASSSWORD MANAGER");
+        JFrame frame = new JFrame("PASSWORD MANAGER");
         frame.setSize(700,700);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.add(panel);
 
         panel.setLayout(null);
-        String [] header = {"Website", "Username", "Password"};
-        //table to store array elements in
+
+        //table to store data elements:
         JTable table = new JTable(0,3);
         DefaultTableModel tblmodel = (DefaultTableModel)table.getModel();
         tblmodel.addRow(new Object[]{"Website", "Username", "Password"});
         panel.add(new JScrollPane(table));
+        //visual guidelines for the table
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setShowHorizontalLines(true);
         table.setShowGrid(true);
@@ -49,7 +48,7 @@ class GUI_2{
         weblabel.setBounds(10, 570, 80, 25);
         panel.add(weblabel);
 
-        //creating textfields for username, password and website fields
+        //creating text fields for username, password and website
         JTextField usertext = new JTextField();
         usertext.setBounds(100, 600 , 165, 25);
         panel.add(usertext);
@@ -71,15 +70,15 @@ class GUI_2{
         //Adding an actionlistener to invoke add button
 
 
-        ActionListener actionListener=new ActionListener() {
+        ActionListener actionListener= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) // Function to invoke add button
             {
 
-                String data[] = {usertext.getText(), passtext.getText(), webtext.getText()};
+                String[] data = {webtext.getText(), usertext.getText(), passtext.getText()};
+                String null1 = "";
 
-
-                if (usertext.equals("") || passtext.equals("")||webtext.equals(""))
+                if (data[0].equals(null1) || data[1].equals(null1) || data[2].equals(null1))
                 {
                     System.out.println("Empty parameter");
                     JOptionPane.showMessageDialog(null, "Enter all fields");
@@ -124,6 +123,46 @@ class GUI_2{
 
             };
 
+        JButton generate = new JButton("Generate Password");
+        generate.setBounds(500, 630, 150 , 25);
+        panel.add(generate);
+        ActionListener actionListener2= new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                int digit = ThreadLocalRandom.current().nextInt(14, 25);
+
+                String lower_case = "qwertyuiopasdfghjklzxcvbnm";
+                String upper_case = "QWERTYUIOPASDFGHJKLZXCVBNM";
+                String special_char = "!@#$%^&*";
+
+                String password = "";
+
+                for(int i =0; i< digit; i++){
+                    int rand = (int)(4 * Math.random());
+
+                    switch(rand){
+                        case 0:
+                            password += String.valueOf((int)(10 * Math.random()));
+                            break;
+                        case 1:
+                            rand = (int)(lower_case.length()* Math.random());
+                            password += String.valueOf(lower_case.charAt(rand));
+                            break;
+                        case 2:
+                            rand = (int)(upper_case.length()* Math.random());
+                            password += String.valueOf(upper_case.charAt(rand));
+                            break;
+                        case 3:
+                            rand = (int)(special_char.length()* Math.random());
+                            password += String.valueOf(special_char.charAt(rand));
+                            break;
+                    }
+
+                    passtext.setText(password);
+                }
+            }
+        };
+        generate.addActionListener(actionListener2);
         removebutton.addActionListener(actionListener1);
         frame.setVisible(true);
     }
